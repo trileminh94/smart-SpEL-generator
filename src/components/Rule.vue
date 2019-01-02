@@ -1,32 +1,51 @@
 <template>
   <div class="row">
     <button @click.prevent="removeRule">&times;</button>
-
-    <select v-model="selectedModel">
-      <option v-for="model in models" :key="model.name" :value="model">{{ model.label }}</option>
-    </select>
-
-    <select v-model="selectedOperator">
-      <option v-for="option in options" :value="option" :key="option.operator">{{ option.label }}</option>
-    </select>
-
-    <rule-input
-      v-for="input in availableInputs"
-      :key="input.id"
-      :type="selectedOperator.type || selectedModel.type"
-      v-model="input.value"
-      @input="onInput"
-    />
-
-    <span class="suffix">{{ selectedOperator.unit || selectedModel.unit }}</span>
+    <div v-if="operatorType === null" class="inline">
+      <button @click.prevent="addBin">Add BinOp</button>
+      <button @click.prevent="addUna">Add UnaryOp</button>
+      <button @click.prevent="addSimple">Add SimpleRule</button>
+    </div>
+    <div v-else-if="operatorType === 'unary'" class="inline">
+      <select v-model="operator">
+        <option v-for="una in unaOp" :value="una" :key="una.operator">{{ una.label }}</option>
+      </select>
+      <button @click.prevent="addSubRule">+ SubRule</button>
+      <button @click.prevent="cancel">Cancel</button>
+    </div>
+    <div v-else-if="operatorType === 'binary'" class="inline">
+      <select v-model="operator">
+        <option v-for="bin in binOp" :value="bin" :key="bin.operator">{{ bin.label }}</option>
+      </select>
+      <button @click.prevent="addSubRule">+ SubRule</button>
+      <button @click.prevent="cancel">Cancel</button>
+    </div>
+    <div v-else class="inline">
+      <select v-model="selectedModel">
+        <option v-for="model in models" :key="model.name" :value="model">{{ model.label }}</option>
+      </select>
+      <select v-model="selectedOperator">
+        <option v-for="option in options" :value="option" :key="option.operator">{{ option.label }}</option>
+      </select>
+      <rule-input
+        v-for="input in availableInputs"
+        :key="input.id"
+        :type="selectedOperator.type || selectedModel.type"
+        v-model="input.value"
+        @input="onInput"
+      />
+    </div>
   </div>
 </template>
 
 <script>
 import models from '../config/models'
 import types from '../config/types'
+import binOp from '../config/binop'
+import unaOp from '../config/unaop'
 
 export default {
+  name: 'rule',
   components: {
     RuleInput: () => import('./RuleInput')
   },
@@ -35,6 +54,10 @@ export default {
 
   data: () => ({
     models,
+    binOp: binOp,
+    unaOp: unaOp,
+    isLeaf: false,
+    operatorType: null,
     selectedModel: null,
     selectedOperator: null,
     inputValues: [],
@@ -54,6 +77,15 @@ export default {
   computed: {
     options () {
       return this.selectedModel ? types[this.selectedModel.type] : []
+    },
+
+    operator () {
+      if (this.operatorType === 'unary') {
+        return this.unaOp[0]
+      } else if (this.operatorType === 'binary') {
+        return this.binOp[0]
+      }
+      return ''
     },
 
     availableInputs () {
@@ -83,6 +115,7 @@ export default {
     this.mutatedRule = Object.assign({}, this.rule)
     this.mutatedRule.model = this.selectedModel = this.models.find(m => m.name === this.mutatedRule.model)
     this.selectedOperator = this.options.find(o => o.operator === this.mutatedRule.operator)
+    this.operatorType = this.rule.operatorType
   },
 
   methods: {
@@ -97,6 +130,23 @@ export default {
 
     removeRule () {
       this.$emit('remove')
+    },
+
+    addBin () {
+      this.operatorType = 'binary'
+    },
+
+    addUna () {
+      this.operatorType = 'unary'
+    },
+
+    addSimple () {
+      this.operatorType = 'simple'
+      this.isLeaf = true
+    },
+
+    cancel () {
+      this.operatorType = null
     }
   }
 }
@@ -106,5 +156,9 @@ export default {
 .row {
   display: block;
   padding-bottom: 8px;
+}
+
+.inline {
+  display: inline-block;
 }
 </style>

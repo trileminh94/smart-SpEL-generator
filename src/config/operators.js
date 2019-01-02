@@ -58,6 +58,16 @@ export const notInLast = {
   unit: 'days'
 }
 
+export const isNotEmpty = {
+  operator: 'notEmpty',
+  label: 'not empty'
+}
+
+export const isEmpty = {
+  operator: 'empty',
+  label: 'empty'
+}
+
 export default [
-  is, isNot, contains, notContain, isBetween, isGreaterThan, isLessThan, beginsWith, endsWith, inLast, notInLast
+  is, isNot, contains, notContain, isBetween, isGreaterThan, isLessThan, beginsWith, endsWith, inLast, notInLast, isEmpty, isNotEmpty
 ]

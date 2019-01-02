@@ -1,18 +1,18 @@
 <template>
   <div class="wrapper">
     <form class="rules" @submit.prevent="submit">
-      <RuleGroup
-        v-for="(group, index) in ruleGroups"
-        :isFirstGroup="index === 0"
-        :key="group.id"
-        :group="group"
-        @input="onGroupChanged"
+      <Rule
+        v-for="rule in rules"
+        :key="rule.id"
+        :rule="rule"
+        @input="onRuleChanged"
+        @remove="removeRule(rule)"
       />
 
-      <button @click.prevent="addGroup">+ OR</button>
+      <button @click.prevent="addRule">+ Rule</button>
 
     </form>
-    <pre class="preview">{{ ruleGroups }}</pre>
+    <pre class="preview">{{ rules }}</pre>
 
     <a class="github" href="https://github.com/phanan/smart-playlist-creator">
       <svg height="32" class="octicon octicon-mark-github" viewBox="0 0 16 16" width="32">
@@ -24,36 +24,53 @@
 
 <script>
 import initData from './stubs/data'
+import models from './config/models'
+import operators from './config/operators'
 
 export default {
   components: {
-    RuleGroup: () => import('./components/RuleGroup')
+    RuleGroup: () => import('./components/RuleGroup'),
+    Rule: () => import('./components/Rule')
   },
 
   data: () => ({
-    ruleGroups: JSON.parse(JSON.stringify(initData))
+    rules: JSON.parse(JSON.stringify(initData))
   }),
 
   methods: {
-    addGroup () {
-      this.ruleGroups.push(this.createGroup())
+    addRule () {
+      this.rules.push(this.createNewRule())
     },
 
-    onGroupChanged (data) {
-      let changedGroup = this.ruleGroups.find(g => g.id === data.id)
+    onRuleChanged (data) {
+      let changedGroup = this.rules.find(g => g.id === data.id)
       changedGroup = Object.assign(changedGroup, data)
 
       // Remove empty group
       if (changedGroup.rules.length === 0) {
-        this.ruleGroups = this.ruleGroups.filter(group => group.id !== changedGroup.id)
+        this.rules = this.rules.filter(group => group.id !== changedGroup.id)
       }
     },
 
-    createGroup () {
+    createNewRule () {
       return {
         id: (new Date).getTime(),
-        rules: []
+        isLeaf: false,
+        operatorType: null,
+        model: models[0].name,
+        operator: operators[0].operator,
+        subrules: [],
+        value: []
       }
+    },
+
+    removeRule (rule) {
+      this.rules = this.rules.filter(r => r.id !== rule.id)
+      this.notifyParentForUpdate()
+    },
+
+    notifyParentForUpdate () {
+      this.$emit('input', this.mutatedGroup)
     }
   }
 }

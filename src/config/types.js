@@ -9,11 +9,14 @@ import {
   isGreaterThan,
   isLessThan,
   inLast,
-  notInLast
+  notInLast,
+  isEmpty,
+  isNotEmpty
 } from './operators'
 
 export default {
   text: [is, isNot, contains, notContain, beginsWith, endsWith],
   number: [is, isNot, isGreaterThan, isLessThan, isBetween],
-  date: [is, isNot, inLast, notInLast, isBetween]
+  date: [is, isNot, inLast, notInLast, isBetween],
+  array: [isEmpty, isNotEmpty]
 }

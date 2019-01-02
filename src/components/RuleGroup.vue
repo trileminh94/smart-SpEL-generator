@@ -1,17 +1,26 @@
 <template>
   <div class="rule-group">
-    <div class="group-banner">
-      <span v-if="isFirstGroup">Select songs with all of these criteria</span>
-      <span v-else>OR all of these criteria</span>
-    </div>
-
     <Rule
-      v-for="rule in mutatedGroup.rules"
-      :key="rule.id"
-      :rule="rule"
+      v-if="mutatedGroup.isLeaf"
+      :rule="mutatedGroup"
       @input="onRuleChanged"
-      @remove="removeRule(rule)"
+      @remove="removeRule(mutatedGroup)"
     />
+    <div v-else>
+      <button @click.prevent="removeRule">&times;</button>
+      <select v-model="mutatedGroup.operator">
+        <option v-for="op in binop" :key="op.name" :value="op.name">{{ op.label }}</option>
+      </select>
+      <div style="margin-left: 20px;">
+        <Rule
+          v-for="rule in mutatedGroup.subrules"
+          :key="rule.id"
+          :rule="rule"
+          @input="onRuleChanged"
+          @remove="removeRule(rule)"
+        />
+      </div>
+    </div>
     <button @click.prevent="addRule">+ AND</button>
   </div>
 </template>
@@ -19,6 +28,7 @@
 <script>
 import models from '../config/models'
 import operators from '../config/operators'
+import binop from '../config/binop'
 
 export default {
   props: ['group', 'isFirstGroup'],
@@ -28,6 +38,7 @@ export default {
   },
 
   data: () => ({
+    binop: binop,
     mutatedGroup: {}
   }),
 
@@ -37,27 +48,34 @@ export default {
 
   methods: {
     onRuleChanged (data) {
-      let changedRule = this.mutatedGroup.rules.find(r => r.id === data.id)
+      let changedRule = this.mutatedGroup.subrules.find(r => r.id === data.id)
       Object.assign(changedRule, data)
       this.notifyParentForUpdate()
     },
 
     addRule () {
-      this.mutatedGroup.rules.push(this.createRule())
+      this.mutatedGroup.subrules.push(this.createRule())
     },
 
     createRule () {
       return {
         id: (new Date).getTime(),
+        isLeaf: false,
+        operatorType: null,
         model: models[0].name,
         operator: operators[0].operator,
-        value: ['']
+        subrules: [],
+        value: []
       }
     },
 
     removeRule (rule) {
-      this.mutatedGroup.rules = this.mutatedGroup.rules.filter(r => r.id !== rule.id)
+      this.mutatedGroup.subrules = this.mutatedGroup.subrules.filter(r => r.id !== rule.id)
       this.notifyParentForUpdate()
+    },
+
+    remove () {
+      this.$emit('remove')
     },
 
     notifyParentForUpdate () {

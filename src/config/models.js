@@ -1,45 +1,27 @@
 export default [
   {
-    name: 'title',
-    type: 'text',
-    label: 'Title'
-  }, {
-    name: 'album.name',
-    type: 'text',
-    label: 'Album'
-  }, {
-    name: 'artist.name',
-    type: 'text',
-    label: 'Artist'
-  }, {
-    name: 'genre',
-    type: 'text',
-    label: 'Genre'
-  }, {
-    name: 'bit_rate',
+    name: 'cmd',
     type: 'number',
-    label: 'Bit Rate',
-    unit: 'kbps'
+    label: 'Cmd'
   }, {
-    name: 'interactions.play_count',
+    name: 'subcmd',
     type: 'number',
-    label: 'Plays'
+    label: 'Sub Cmd'
   }, {
-    name: 'interactions.updated_at',
-    type: 'date',
-    label: 'Last Played'
-  }, {
-    name: 'length',
+    name: 'result',
     type: 'number',
-    label: 'Length',
-    unit: 'seconds'
+    label: 'Result'
   }, {
-    name: 'created_at',
-    type: 'date',
-    label: 'Date Added'
+    name: 'params',
+    type: 'text',
+    label: 'Params'
   }, {
-    name: 'updated_at',
-    type: 'date',
-    label: 'Date Modified'
+    name: 'subparams',
+    type: 'text',
+    label: 'Sub Params'
+  }, {
+    name: 'ip',
+    type: 'text',
+    label: 'Server Ip'
   }
 ]
