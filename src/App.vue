@@ -8,7 +8,6 @@
         @input="onRuleChanged"
         @remove="removeRule(rule)"
       />
-
       <button @click.prevent="addRule">+ Rule</button>
 
     </form>
