@@ -4,16 +4,15 @@
       <button @click.prevent="removeRule">&times;</button>
     </div>
     <div v-if="operatorType === null" class="inline">
+      <button @click.prevent="addSimple">Add SimpleRule</button>
       <button @click.prevent="addBin">Add BinOp</button>
       <button @click.prevent="addUna">Add UnaryOp</button>
-      <button @click.prevent="addSimple">Add SimpleRule</button>
     </div>
     <div v-else-if="operatorType === 'unary'" class="inline">
-      <select v-model="operator">
+      <select v-on:change="onInput" v-model="operator">
         <option v-for="una in operators" :value="una" :key="una.operator">{{ una.label }}</option>
       </select>
       <button @click.prevent="addSubRule">+ SubRule</button>
-      <button @click.prevent="cancel">Cancel</button>
       <Rule 
         v-for="rule in this.mutatedRule.subrules"
         :key="rule.id"
@@ -23,11 +22,10 @@
       />
     </div>
     <div v-else-if="operatorType === 'binary'" class="inline">
-      <select v-model="operator">
+      <select v-on:change="onInput" v-model="operator">
         <option v-for="bin in operators" :value="bin" :key="bin.operator">{{ bin.label }}</option>
       </select>
       <button @click.prevent="addSubRule">+ SubRule</button>
-      <button @click.prevent="cancel">Cancel</button>
       <Rule 
         v-for="rule in this.mutatedRule.subrules"
         :key="rule.id"
@@ -37,16 +35,16 @@
       />
     </div>
     <div v-else class="inline">
-      <select v-model="selectedModel">
+      <select v-on:change="onInput" v-model="selectedModel">
         <option v-for="model in models" :key="model.name" :value="model">{{ model.label }}</option>
       </select>
-      <select v-model="simpleOperator">
+      <select v-on:change="onInput" v-model="operator">
         <option v-for="option in simpleOperatorOptions" :value="option" :key="option.operator">{{ option.label }}</option>
       </select>
       <rule-input
         v-for="input in availableInputs"
         :key="input.id"
-        :type="simpleOperator.type || selectedModel.type"
+        :type="operator.type || selectedModel.type"
         v-model="input.value"
         @input="onInput"
       />
@@ -78,7 +76,6 @@ export default {
     operator: null,
     operatorType: null,
     selectedModel: null,
-    simpleOperator: null,
     inputValues: [],
     mutatedRule: {},
   }),
@@ -86,9 +83,9 @@ export default {
   watch: {
     simpleOperatorOptions () {
       if (this.selectedModel === this.mutatedRule.model) {
-        this.simpleOperator = this.simpleOperatorOptions.find(o => o.operator === this.mutatedRule.operator)
+        this.operator = this.simpleOperatorOptions.find(o => o.operator === this.mutatedRule.operator)
       } else {
-        this.simpleOperator = this.simpleOperatorOptions[0]
+        this.operator = this.simpleOperatorOptions[0]
       }
     },
 
@@ -112,15 +109,15 @@ export default {
     },
 
     availableInputs () {
-      if (!this.simpleOperator) {
+      if (!this.operator) {
         return []
       }
 
       const inputs = []
 
-      for (let i = 0, inputCount =  this.simpleOperator.inputs || 1; i < inputCount; ++i) {
+      for (let i = 0, inputCount =  this.operator.inputs || 1; i < inputCount; ++i) {
         inputs.push({
-          id: `${this.mutatedRule.model.name}_${this.simpleOperator.operator}_${i}`,
+          id: `${this.mutatedRule.model.name}_${this.operator.operator}_${i}`,
           value: this.isOriginalOperatorSelected ? this.mutatedRule.value[i] : ''
         })
       }
@@ -130,7 +127,7 @@ export default {
 
     isOriginalOperatorSelected () {
       return this.selectedModel === this.mutatedRule.model &&
-        this.simpleOperator.operator === this.mutatedRule.operator
+        this.operator.operator === this.mutatedRule.operator
     }
   },
 
@@ -138,7 +135,6 @@ export default {
     this.mutatedRule = Object.assign({}, this.rule)
     this.mutatedRule.model = this.selectedModel = this.models.find(m => m.name === this.mutatedRule.model)
     this.operatorType = this.rule.operatorType
-    this.simpleOperator = this.operatorType === "simple" ? this.simpleOperatorOptions.find(o => o.operator === this.mutatedRule.operator) : ''
     this.operator = (() => { 
       if (this.operatorType === "unary") {
         return unaOp[0]
@@ -157,7 +153,7 @@ export default {
       this.$emit('input', {
         id: this.mutatedRule.id,
         model: this.selectedModel.name,
-        operator: this.simpleOperator.operator,
+        operator: this.operator.operator,
         value: this.availableInputs.map(input => input.value),
         subrules: this.mutatedRule.subrules,
         operatorType: this.operatorType,
@@ -170,8 +166,6 @@ export default {
     },
 
     remove (rule) {
-      // eslint-disable-next-line
-      console.log("call remove ", rule)
       this.mutatedRule.subrules = this.mutatedRule.subrules.filter(r => r.id !== rule.id)
       this.notifyUpdateSubRule()
     },
@@ -198,12 +192,6 @@ export default {
     addSimple () {
       this.operatorType = 'simple'
       this.isLeaf = true
-      this.notifyUpdateSubRule()
-    },
-
-    cancel () {
-      this.operatorType = null
-      this.mutatedRule.subrules = []
       this.notifyUpdateSubRule()
     },
 
