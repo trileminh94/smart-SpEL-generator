@@ -89,6 +89,10 @@ export default {
       }
     },
 
+    operators () {
+      this.operator = this.getOperator(this.operatorType, this.mutatedRule.operator)
+    },
+
     mutatedRule () {
       this.$forceUpdate()
     }
@@ -140,20 +144,34 @@ export default {
     this.mutatedRule = Object.assign({}, this.rule)
     this.mutatedRule.model = this.selectedModel = this.models.find(m => m.name === this.mutatedRule.model)
     this.operatorType = this.rule.operatorType
-    this.operator = (() => { 
-      if (this.operatorType === "unary") {
-        return unaOp[0]
-      } else if (this.operatorType === "binary") {
-        return binOp[0]
-      } else if (this.operatorType === "simple") {
-        return this.simpleOperatorOptions.find(o => o.operator === this.mutatedRule.operator)
-      } else {
-        return null
-      }
-    })()
+    this.operator = this.getOperator(this.operatorType, this.mutatedRule.operator)
   },
 
   methods: {
+    getOperator (operatorType, operator) {
+      var result = null
+      if (operator !== null && operator !== undefined) {
+        if (operatorType === "unary") {
+          result = unaOp.find(o => o.operator === operator)
+        } else if (operatorType === "binary") {
+          result = binOp.find(o => o.operator === operator)
+        } else if (operatorType === "simple") {
+          result = this.simpleOperatorOptions.find(o => o.operator === operator)
+        }
+      } else {
+        if (operatorType === "unary") {
+          result = unaOp[0]
+        } else if (operatorType === "binary") {
+          result = binOp[0]
+        } else if (operatorType === "simple") {
+          result = this.simpleOperatorOptions.find(o => o.operator === operator)
+        }
+      }
+      // eslint-disable-next-line
+      console.log("get ", operatorType, operator, result)
+      return result
+    },
+
     onInput () {
       this.$emit('input', {
         id: this.mutatedRule.id,

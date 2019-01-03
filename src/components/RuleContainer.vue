@@ -18,9 +18,7 @@ export default {
     Rule: () => import("./Rule")
   },
 
-  data: () => ({
-    rule: null
-  }),
+  props: ['rule'],
 
   created: () => {
     // this.rule = JSON.parse(JSON.stringify(initData))
