@@ -4,15 +4,15 @@
       <button @click.prevent="removeRule">&times;</button>
     </div>
     <div v-if="operatorType === null" class="inline">
-      <button @click.prevent="addSimple">Add SimpleRule</button>
-      <button @click.prevent="addBin">Add BinOp</button>
-      <button @click.prevent="addUna">Add UnaryOp</button>
+      <button @click.prevent="addSimple">+ Simple Rule</button>
+      <button @click.prevent="addBin">+ BinOp</button>
+      <button @click.prevent="addUna">+ UnaryOp</button>
     </div>
     <div v-else-if="operatorType === 'unary'" class="inline">
       <select v-on:change="onInput" v-model="operator">
         <option v-for="una in operators" :value="una" :key="una.operator">{{ una.label }}</option>
       </select>
-      <button @click.prevent="addSubRule">+ SubRule</button>
+      <button v-if="canAddSubRule" @click.prevent="addSubRule">+ SubRule</button>
       <Rule 
         v-for="rule in this.mutatedRule.subrules"
         :key="rule.id"
@@ -25,7 +25,7 @@
       <select v-on:change="onInput" v-model="operator">
         <option v-for="bin in operators" :value="bin" :key="bin.operator">{{ bin.label }}</option>
       </select>
-      <button @click.prevent="addSubRule">+ SubRule</button>
+      <button v-if="canAddSubRule" @click.prevent="addSubRule">+ SubRule</button>
       <Rule 
         v-for="rule in this.mutatedRule.subrules"
         :key="rule.id"
@@ -128,6 +128,11 @@ export default {
     isOriginalOperatorSelected () {
       return this.selectedModel === this.mutatedRule.model &&
         this.operator.operator === this.mutatedRule.operator
+    },
+
+    canAddSubRule () {
+      return (this.operatorType === 'binary' && this.mutatedRule.subrules.length < 2) 
+        || (this.operatorType === 'unary' && this.mutatedRule.subrules.length < 1)
     }
   },
 
