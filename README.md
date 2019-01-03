@@ -1,6 +1,6 @@
-# smart-playlist-creator
+# smart-rule-creator
 
-> A PoC smart playlist creator.
+> A PoC smart logic expression creator.
 
 ## Project setup
 ```
