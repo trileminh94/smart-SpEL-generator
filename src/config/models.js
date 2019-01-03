@@ -1,7 +1,7 @@
 export default [
   {
     name: 'cmd',
-    type: 'number',
+    type: 'cmd',
     label: 'Cmd'
   }, {
     name: 'subcmd',

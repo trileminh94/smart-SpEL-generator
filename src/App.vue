@@ -2,53 +2,48 @@
   <div class="wrapper">
     <form class="rules" @submit.prevent="submit">
       <Rule
-        v-for="rule in rules"
-        :key="rule.id"
+        v-if="rule !== null"
         :rule="rule"
         @input="onRuleChanged"
-        @remove="removeRule(rule)"
+        @remove="removeRule()"
       />
-      <button @click.prevent="addRule">+ Rule</button>
-
+      <button v-if="isNoRule" @click.prevent="addRule">+ Rule</button>
     </form>
-    <pre class="preview">{{ rules }}</pre>
-
-    <a class="github" href="https://github.com/phanan/smart-playlist-creator">
-      <svg height="32" class="octicon octicon-mark-github" viewBox="0 0 16 16" width="32">
-        <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"></path>
-      </svg>
-    </a>
+    <pre class="preview">{{ rule }}</pre>
   </div>
 </template>
 
 <script>
-import initData from './stubs/data'
+// import initData from './stubs/data'
 import models from './config/models'
 import operators from './config/operators'
 
 export default {
   components: {
-    RuleGroup: () => import('./components/RuleGroup'),
     Rule: () => import('./components/Rule')
   },
 
   data: () => ({
-    rules: JSON.parse(JSON.stringify(initData))
+    rule: null
   }),
+
+  created: () => {
+    // this.rule = JSON.parse(JSON.stringify(initData))
+  },
+
+  computed: {
+    isNoRule () {
+      return this.rule === null
+    }
+  },
 
   methods: {
     addRule () {
-      this.rules.push(this.createNewRule())
+      this.rule = this.createNewRule()
     },
 
     onRuleChanged (data) {
-      let changedGroup = this.rules.find(g => g.id === data.id)
-      changedGroup = Object.assign(changedGroup, data)
-
-      // Remove empty group
-      if (changedGroup.rules.length === 0) {
-        this.rules = this.rules.filter(group => group.id !== changedGroup.id)
-      }
+      Object.assign(this.rule, data)
     },
 
     createNewRule () {
@@ -63,13 +58,13 @@ export default {
       }
     },
 
-    removeRule (rule) {
-      this.rules = this.rules.filter(r => r.id !== rule.id)
+    removeRule () {
+      this.rule = null
       this.notifyParentForUpdate()
     },
 
     notifyParentForUpdate () {
-      this.$emit('input', this.mutatedGroup)
+      this.$emit('input', this.rule)
     }
   }
 }
