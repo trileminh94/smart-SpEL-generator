@@ -5,12 +5,14 @@
       <button v-if="isNoRule" @click.prevent="addRule">+ Rule</button>
     </form>
     <pre class="preview">{{ rule }}</pre>
+    <pre class="preview" style="background-color: white;">{{ code }}</pre>
   </div>
 </template>
 
 <script>
 import models from '../config/models'
 import operators from '../config/operators'
+import { genCode } from '../config/gencode'
 
 export default {
   name: 'rule-container',
@@ -27,6 +29,9 @@ export default {
   computed: {
     isNoRule() {
       return this.rule === null;
+    },
+    code () {
+        return genCode(this.rule)
     }
   },
 
@@ -53,7 +58,8 @@ export default {
     },
 
     removeRule() {
-      this.$emit("input", {});
+      this.rule = null;
+      this.notifyParentForUpdate();
     },
 
     notifyParentForUpdate() {
