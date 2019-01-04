@@ -4,8 +4,8 @@
       <Rule v-if="rule !== null" :rule="rule" @input="onRuleChanged" @remove="removeRule()"/>
       <button v-if="isNoRule" @click.prevent="addRule">+ Rule</button>
     </form>
-    <pre class="preview">{{ rule }}</pre>
     <pre class="preview" style="background-color: white;">{{ code }}</pre>
+    <pre class="preview">{{ rule }}</pre>
   </div>
 </template>
 
