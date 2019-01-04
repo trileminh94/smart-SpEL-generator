@@ -1,18 +1,20 @@
 <template>
-  <div class="row rule">
-    <div style="display: inline-block; vertical-align: top;">
+  <div class="row rule" style="border-left: 1px solid #aaa;">
+    <div style="display: inline-block; vertical-align: top; margin-left: -23px;">
       <button @click.prevent="removeRule">&times;</button>
     </div>
     <div v-if="operatorType === null" class="inline">
       <button @click.prevent="addSimple">+ Simple Rule</button>
       <button @click.prevent="addBin">+ BinOp</button>
       <button @click.prevent="addUna">+ UnaryOp</button>
+      <Alert v-if="!isValid" />
     </div>
     <div v-else-if="operatorType === 'unary'" class="inline">
       <select v-on:change="onInput" v-model="operator">
         <option v-for="una in operators" :value="una" :key="una.operator">{{ una.label }}</option>
       </select>
       <button v-if="canAddSubRule" @click.prevent="addSubRule">+ SubRule</button>
+      <Alert v-if="!isValid" />
       <Rule 
         v-for="rule in this.mutatedRule.subrules"
         :key="rule.id"
@@ -26,6 +28,7 @@
         <option v-for="bin in operators" :value="bin" :key="bin.operator">{{ bin.label }}</option>
       </select>
       <button v-if="canAddSubRule" @click.prevent="addSubRule">+ SubRule</button>
+      <Alert v-if="!isValid" />
       <Rule 
         v-for="rule in this.mutatedRule.subrules"
         :key="rule.id"
@@ -48,6 +51,7 @@
         v-model="input.value"
         @input="onInput"
       />
+      <Alert v-if="!isValid" />
     </div>
   </div>
 </template>
@@ -63,7 +67,8 @@ export default {
   name: 'rule',
   components: {
     RuleInput: () => import('./RuleInput'),
-    Rule: () => import('./Rule')
+    Rule: () => import('./Rule'),
+    Alert: () => import('./Alert')
   },
 
   props: ['rule'],
@@ -110,6 +115,17 @@ export default {
         return this.binOp
       }
       return []
+    },
+
+    isValid () {
+      if (this.operatorType === 'unary') {
+        return this.mutatedRule.subrules.length === 1
+      } else if (this.operatorType === 'binary') {
+        return this.mutatedRule.subrules.length === 2
+      } else if (this.operatorType === 'simple') {
+        return true
+      }
+      return false
     },
 
     availableInputs () {
@@ -250,6 +266,8 @@ export default {
 
 .rule {
   vertical-align: text-top;
-  padding: 5px;
+  padding: 8px;
+  padding-left: 10px;
 }
+
 </style>

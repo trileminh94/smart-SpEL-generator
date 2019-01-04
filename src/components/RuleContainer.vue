@@ -53,8 +53,7 @@ export default {
     },
 
     removeRule() {
-      this.rule = null;
-      this.notifyParentForUpdate();
+      this.$emit("input", {});
     },
 
     notifyParentForUpdate() {
