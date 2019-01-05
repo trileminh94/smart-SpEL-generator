@@ -96,9 +96,12 @@ input {
   margin-right: 4px;
 }
 
-select,
+select {
+  width: auto;
+}
+
 input {
-  width: 128px;
+    width: 120px;
 }
 
 button {
