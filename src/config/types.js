@@ -11,11 +11,13 @@ import {
   inLast,
   notInLast,
   isEmpty,
-  isNotEmpty
+  isNotEmpty,
+  notEqual,
+  equal
 } from './operators'
 
 export default {
-  text: [is, isNot, contains, notContain, beginsWith, endsWith],
+  text: [equal, notEqual, contains, notContain, beginsWith, endsWith],
   number: [is, isNot, isGreaterThan, isLessThan, isBetween],
   cmd: [is],
   date: [is, isNot, inLast, notInLast, isBetween],

@@ -8,6 +8,16 @@ export const isNot = {
   label: 'is not'
 }
 
+export const equal = {
+  operator: 'equal',
+  label: 'equal'
+}
+
+export const notEqual = {
+  operator: 'notEqual',
+  label: 'not equal'
+}
+
 export const contains = {
   operator: 'contains',
   label: 'contains'
@@ -69,5 +79,5 @@ export const isEmpty = {
 }
 
 export default [
-  is, isNot, contains, notContain, isBetween, isGreaterThan, isLessThan, beginsWith, endsWith, inLast, notInLast, isEmpty, isNotEmpty
+  is, isNot, equal, notEqual, contains, notContain, isBetween, isGreaterThan, isLessThan, beginsWith, endsWith, inLast, notInLast, isEmpty, isNotEmpty
 ]

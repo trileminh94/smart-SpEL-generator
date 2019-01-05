@@ -123,6 +123,7 @@ export default {
       } else if (this.operatorType === 'binary') {
         return this.mutatedRule.subrules.length === 2
       } else if (this.operatorType === 'simple') {
+        // return this.value !== undefined && this.value.length >= 1 && this.value[0] !== ''
         return true
       }
       return false
