@@ -271,4 +271,8 @@ export default {
   padding-left: 10px;
 }
 
+button:hover {
+  border-color: #aaa;
+  font-weight: bold;
+}
 </style>
