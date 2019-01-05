@@ -273,6 +273,7 @@ export default {
 
 button:hover {
   border-color: #aaa;
-  font-weight: bold;
+  text-shadow: 0.5px 0px 0px #333;
 }
+
 </style>
