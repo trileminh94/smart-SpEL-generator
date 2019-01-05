@@ -121,7 +121,7 @@ export default {
       if (this.operatorType === 'unary') {
         return this.mutatedRule.subrules.length === 1
       } else if (this.operatorType === 'binary') {
-        return this.mutatedRule.subrules.length === 2
+        return this.mutatedRule.subrules.length >= 2
       } else if (this.operatorType === 'simple') {
         // return this.value !== undefined && this.value.length >= 1 && this.value[0] !== ''
         return true
@@ -152,7 +152,7 @@ export default {
     },
 
     canAddSubRule () {
-      return (this.operatorType === 'binary' && this.mutatedRule.subrules.length < 2) 
+      return (this.operatorType === 'binary') 
         || (this.operatorType === 'unary' && this.mutatedRule.subrules.length < 1)
     }
   },

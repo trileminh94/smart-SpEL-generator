@@ -27,7 +27,11 @@ export const genCode = (root) => {
             var left = genCode(root.subrules[0]);
             var right = genCode(root.subrules[1]);
             var binop = processTree(model, operatorType, operator, value);
-            return "(" + left + " " + binop + " " + right + ")";
+            var simpleResult = left + " " + binop + " " + right
+            for (var i = 2; i < root.subrules.length; i++) {
+                simpleResult = simpleResult + " " + binop + " " + genCode(root.subrules[i])
+            }
+            return "(" + simpleResult + ")";
         } else if (operatorType === 'unary') {
             var tree = genCode(root.subrules[0])
             var unaop = processTree(model, operatorType, operator, value);
@@ -42,10 +46,14 @@ function checkValid(root) {
         return root.value.length >= 1 && root.value[0] !== ''
     } else {
         if (operatorType === 'binary') {
-            if (root.subrules.length === 2) {
+            if (root.subrules.length >= 2) {
                 var c1 = checkValid(root.subrules[0])
                 var c2 = checkValid(root.subrules[1])
-                return c1 && c2
+                var result = c1 && c2
+                for (var i = 2; i < root.subrules.length; i++) {
+                    result = result && checkValid(root.subrules[i])
+                }
+                return result
             }
             return false
         } else if (operatorType === 'unary') {

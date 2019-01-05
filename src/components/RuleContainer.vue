@@ -5,7 +5,7 @@
       <button v-if="isNoRule" @click.prevent="addRule">+ Rule</button>
     </form>
     <pre class="preview" style="background-color: white; font-size: 13px;">Result: {{ code }}</pre>
-    <pre class="preview">{{ rule }}</pre>
+    <pre class="preview" style="max-width: 300px;">{{ rule }}</pre>
   </div>
 </template>
 
