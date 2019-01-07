@@ -9,7 +9,8 @@ import {
     isGreaterThan,
     isLessThan,
     notEqual,
-    equal
+    equal,
+    hasField
   } from './operators'
 
 export const genCode = (root) => {
@@ -126,6 +127,10 @@ function processTree(model, operatorType, operator, value) {
         if (operator === isGreaterThan.operator) {
             resData = model + '>' + value[0]
         }
+
+        // if (operator === hasField.operator) {
+        //     resData = model. + '>' + value[0]
+        // }
     }
     return resData;
 }

@@ -78,6 +78,26 @@ export const isEmpty = {
   label: 'empty'
 }
 
+export const hasField = {
+  operator: 'hasField',
+  label: 'has field'
+}
+
 export default [
-  is, isNot, equal, notEqual, contains, notContain, isBetween, isGreaterThan, isLessThan, beginsWith, endsWith, inLast, notInLast, isEmpty, isNotEmpty
+  is,
+  isNot,
+  equal,
+  notEqual,
+  contains,
+  notContain,
+  isBetween,
+  isGreaterThan,
+  isLessThan,
+  beginsWith,
+  endsWith,
+  inLast,
+  notInLast,
+  isEmpty,
+  isNotEmpty,
+  hasField
 ]

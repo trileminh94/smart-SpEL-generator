@@ -13,11 +13,11 @@ export default [
     label: 'Result'
   }, {
     name: 'params',
-    type: 'text',
+    type: 'json',
     label: 'Params'
   }, {
     name: 'subparams',
-    type: 'text',
+    type: 'json',
     label: 'Sub Params'
   }, {
     name: 'ip',
