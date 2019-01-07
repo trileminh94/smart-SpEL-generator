@@ -83,6 +83,11 @@ export const hasField = {
   label: 'has field'
 }
 
+export const notHasField = {
+  operator: 'notHasField',
+  label: "doesn't has field"
+}
+
 export default [
   is,
   isNot,
@@ -99,5 +104,6 @@ export default [
   notInLast,
   isEmpty,
   isNotEmpty,
-  hasField
+  hasField,
+  notHasField
 ]

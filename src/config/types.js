@@ -14,14 +14,15 @@ import {
   isNotEmpty,
   notEqual,
   equal,
-  hasField
+  hasField,
+  notHasField
 } from './operators'
 
 export default {
   text: [equal, notEqual, contains, notContain, beginsWith, endsWith],
   number: [is, isNot, isGreaterThan, isLessThan, isBetween],
   cmd: [is],
-  json: [equal, notEqual, contains, notContain, beginsWith, endsWith, hasField],
+  json: [equal, notEqual, contains, notContain, beginsWith, endsWith, hasField, notHasField],
   date: [is, isNot, inLast, notInLast, isBetween],
   array: [isEmpty, isNotEmpty]
 }

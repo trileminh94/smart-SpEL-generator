@@ -16,12 +16,27 @@ export default [
     type: 'json',
     label: 'Params'
   }, {
-    name: 'subparams',
+    name: 'extparams',
     type: 'json',
-    label: 'Sub Params'
+    label: 'Ext Params'
   }, {
     name: 'ip',
     type: 'text',
     label: 'Server Ip'
   }
 ]
+
+export const getModel = (model) => {
+  switch(model) {
+      case 'cmd':
+          return 'logJob.getCommand()'
+      case 'subcmd':
+          return 'logJob.getSubCommand()'
+      case 'result':
+        return 'logJob.getResult()'
+      case 'params':
+        return 'logJob.getParam()'
+      case 'extparams':
+        return 'logJob.getExtParam()'
+  }
+}

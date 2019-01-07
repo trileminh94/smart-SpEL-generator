@@ -10,8 +10,11 @@ import {
     isLessThan,
     notEqual,
     equal,
-    hasField
+    hasField,
+    notHasField
   } from './operators'
+
+import { getModel } from './models'
 
 export const genCode = (root) => {
     if ( root === null || !checkValid(root)) {
@@ -84,53 +87,58 @@ function processTree(model, operatorType, operator, value) {
     }
 
     if (operatorType === 'simple') {
+        var modelResult = getModel(model)
         if (operator === is.operator) {
-            resData = model + '==' + value[0] ;
+            resData = modelResult + '==' + value[0] ;
         }
 
         if (operator === isNot.operator) {
-            resData = model + '!=' + value[0] ;
+            resData = modelResult + '!=' + value[0] ;
         }
 
         if (operator === equal.operator) {
-            resData = model + '=="' + value[0] + '"'
+            resData = modelResult + '=="' + value[0] + '"'
         }
 
         if (operator === notEqual.operator) {
-            resData = model + '!="' + value[0] + '"'
+            resData = modelResult + '!="' + value[0] + '"'
         }
 
         if (operator === contains.operator) {
-            resData = model + '.contains' + '("' + value + '")';
+            resData = modelResult + '.contains' + '("' + value + '")';
         }
 
         if (operator === notContain.operator) {
-            resData = model + '.notContains' + '("' + value + '")';
+            resData = modelResult + '.notContains' + '("' + value + '")';
         }
 
         if (operator === beginsWith.operator) {
-            resData = model + '.beginWith' + '(' + value + ')';
+            resData = modelResult + '.beginWith' + '(' + value + ')';
         }
 
         if (operator === endsWith.operator) {
-            resData = model + '.endWith' + '(' + value + ')';
+            resData = modelResult + '.endWith' + '(' + value + ')';
         }
 
         if (operator === isBetween.operator) {
-            resData = '(' + model + ' > ' + value[0] + ' && ' + model + ' < ' + value[1] + ')'
+            resData = '(' + modelResult + ' > ' + value[0] + ' && ' + modelResult + ' < ' + value[1] + ')'
         }
 
         if (operator === isLessThan.operator) {
-            resData = model + '<' + value[0]
+            resData = modelResult + '<' + value[0]
         }
 
         if (operator === isGreaterThan.operator) {
-            resData = model + '>' + value[0]
+            resData = modelResult + '>' + value[0]
         }
 
-        // if (operator === hasField.operator) {
-        //     resData = model. + '>' + value[0]
-        // }
+        if (operator === hasField.operator) {
+            resData = "(#jsonPath(" + modelResult + ",'$.[?(@." + value[0] + ")]').size() > 0)"
+        }
+
+        if (operator === notHasField.operator) {
+            resData = "!(#jsonPath(" + modelResult + ",'$.[?(@." + value[0] + ")]').size() > 0)"
+        }
     }
     return resData;
 }
