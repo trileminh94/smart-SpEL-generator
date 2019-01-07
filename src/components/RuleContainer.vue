@@ -1,12 +1,15 @@
 <template>
   <div class="wrapper">
-    <div style="display: flex; flex-direction: column; flex-grow: 1; padding: 20px;">
-        <form class="rules" @submit.prevent="submit" style="flex-grow: 1;">
-            <Rule v-if="rule !== null" :rule="rule" @input="onRuleChanged" @remove="removeRule()"/>
+    <div style="display: flex; flex-direction: column; flex-grow: 1; padding: 20px; min-width: 600px !important;">
+        <form class="rules" @submit.prevent="submit" >
+            <Rule v-if="rule !== null && type == 'logjob'" :rule="rule" @input="onRuleChanged" @remove="removeRule()"/>
             <button v-if="isNoRule" @click.prevent="addRule">+ Rule LogJob</button>
             <button v-if="isNoRule" @click.prevent="addRuleNoFormat">+ Rule LogArr</button>
         </form>
-        <pre class="preview" style=" margin-top: 20px; flex-grow: 1; background-color: white; font-size: 13px;">Result: {{ code }}</pre>
+        <div style="width: 100%; padding: 10px; margin-top: 20px;">
+            <label style="display: block;">Validation Rule: </label>
+            <textarea disabled class="ruleInput" :value="code"></textarea>
+        </div>
     </div>
     <pre class="preview" style="max-width: 300px;">{{ rule }}</pre>
   </div>
@@ -23,7 +26,7 @@ export default {
     Rule: () => import("./Rule")
   },
 
-  props: ['rule'],
+  props: ['rule', 'type'],
 
   created: () => {
     // this.rule = JSON.parse(JSON.stringify(initData))
@@ -41,6 +44,7 @@ export default {
   methods: {
     addRule() {
       this.rule = this.createNewRule();
+      this.type = 'logjob';
     },
 
     addRuleNoFormat() {
@@ -129,6 +133,24 @@ button {
     flex-grow: 2;
     flex-basis: 0;
     padding: 15px;
+  }
+
+   label {
+       font-size: 14px;
+       font-weight: 400;
+       color: #555;
+   }
+
+  .ruleInput {
+    background-color: white;
+    font-size: 14px;
+    width: 100%;
+    border: 1px solid rgb(221, 221, 221);
+    min-height: 60px;
+    padding: 10px;
+    margin-top: 10px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   }
 
   pre {

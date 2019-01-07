@@ -1,6 +1,7 @@
 <template>
   <RuleContainer
     :rule="rule"
+    :type="type"
     @input="onRuleChanged"
   />
 </template>
@@ -13,10 +14,12 @@ export default {
     RuleContainer: () => import("./components/RuleContainer")
   },
   data: () => ({
-    rule: null
+    rule: null,
+    type: null
   }),
   created () {
     this.rule = JSON.parse(JSON.stringify(initData))
+    this.type = 'logjob'
   },
   methods: {
     onRuleChanged(data) {

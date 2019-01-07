@@ -24,6 +24,14 @@ export default [
     type: 'json',
     label: 'Ext Params'
   }, {
+    name: 'clienttype',
+    type: 'number',
+    label: 'Client Type'
+  }, {
+    name: 'clientversion',
+    type: 'number',
+    label: 'Client Version'
+  }, {
     name: 'ip',
     type: 'text',
     label: 'Server Ip'
@@ -44,5 +52,10 @@ export const getModel = (model) => {
         return 'logJob.getExtParam()'
       case 'category':
         return 'category.getCategory()'
+      case 'clienttype':
+        return 'logJob.getClientType()'
+      case 'clientversion':
+        return 'logJob.getClientVersion()'
+
   }
 }
