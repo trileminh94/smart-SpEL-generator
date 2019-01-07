@@ -1,6 +1,6 @@
-# smart-rule-creator
+# smart-SpEL-creator
 
-> A PoC smart logic expression creator.
+![alt text](https://raw.githubusercontent.com/trileminh94/smart-SpEL-generator/master/assets/demo.png)
 
 ## Project setup
 ```
