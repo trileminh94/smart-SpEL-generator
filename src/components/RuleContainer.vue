@@ -1,10 +1,13 @@
 <template>
   <div class="wrapper">
-    <form class="rules" @submit.prevent="submit">
-      <Rule v-if="rule !== null" :rule="rule" @input="onRuleChanged" @remove="removeRule()"/>
-      <button v-if="isNoRule" @click.prevent="addRule">+ Rule</button>
-    </form>
-    <pre class="preview" style="background-color: white; font-size: 13px;">Result: {{ code }}</pre>
+    <div style="display: flex; flex-direction: column; flex-grow: 1; padding: 20px;">
+        <form class="rules" @submit.prevent="submit" style="flex-grow: 1;">
+            <Rule v-if="rule !== null" :rule="rule" @input="onRuleChanged" @remove="removeRule()"/>
+            <button v-if="isNoRule" @click.prevent="addRule">+ Rule LogJob</button>
+            <button v-if="isNoRule" @click.prevent="addRuleNoFormat">+ Rule LogArr</button>
+        </form>
+        <pre class="preview" style=" margin-top: 20px; flex-grow: 1; background-color: white; font-size: 13px;">Result: {{ code }}</pre>
+    </div>
     <pre class="preview" style="max-width: 300px;">{{ rule }}</pre>
   </div>
 </template>
@@ -38,6 +41,10 @@ export default {
   methods: {
     addRule() {
       this.rule = this.createNewRule();
+    },
+
+    addRuleNoFormat() {
+
     },
 
     onRuleChanged(data) {
@@ -112,9 +119,14 @@ button {
 .wrapper {
   display: flex;
 
-  > form,
-  > pre {
+  > form {
     flex-grow: 1;
+    flex-basis: 0;
+    padding: 15px;
+  }
+
+  > pre {
+    flex-grow: 2;
     flex-basis: 0;
     padding: 15px;
   }

@@ -12,6 +12,10 @@ export default [
     type: 'number',
     label: 'Result'
   }, {
+    name: 'category',
+    type: 'text',
+    label: 'Category'
+  }, {
     name: 'params',
     type: 'json',
     label: 'Params'
@@ -38,5 +42,7 @@ export const getModel = (model) => {
         return 'logJob.getParam()'
       case 'extparams':
         return 'logJob.getExtParam()'
+      case 'category':
+        return 'category.getCategory()'
   }
 }
