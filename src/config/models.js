@@ -56,6 +56,7 @@ export const getModel = (model) => {
         return 'logJob.getClientType()'
       case 'clientversion':
         return 'logJob.getClientVersion()'
-
+      case 'ip':
+        return 'logJob.getIp()'
   }
 }

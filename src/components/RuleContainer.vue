@@ -37,7 +37,11 @@ export default {
       return this.rule === null;
     },
     code () {
-        return genCode(this.rule)
+        if (this.type == 'logjob') {
+            return "(logJob != null && " + genCode(this.rule) + ")"
+        } else {
+            return ""
+        }
     }
   },
 
@@ -48,7 +52,8 @@ export default {
     },
 
     addRuleNoFormat() {
-
+      this.rule = this.createNewArrRule();
+      this.type = 'logarr';
     },
 
     onRuleChanged(data) {
@@ -66,6 +71,12 @@ export default {
         subrules: [],
         value: []
       };
+    },
+
+    createNewArrRule() {
+      return {
+        
+      }
     },
 
     removeRule() {

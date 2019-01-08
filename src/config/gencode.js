@@ -97,27 +97,27 @@ function processTree(model, operatorType, operator, value) {
         }
 
         if (operator === equal.operator) {
-            resData = modelResult + '=="' + value[0] + '"'
+            resData = '"' + value[0] + '".equals(' + modelResult + ')'
         }
 
         if (operator === notEqual.operator) {
-            resData = modelResult + '!="' + value[0] + '"'
+            resData = '!("' + value[0] + '".equals(' + modelResult + '))'
         }
 
         if (operator === contains.operator) {
-            resData = modelResult + '.contains' + '("' + value + '")';
+            resData = "(" + modelResult + " != null && " + modelResult + '.contains' + '("' + value + '"))';
         }
 
         if (operator === notContain.operator) {
-            resData = modelResult + '.notContains' + '("' + value + '")';
+            resData = "(" + modelResult + " != null && !" + modelResult + '.contains' + '("' + value + '"))';
         }
 
         if (operator === beginsWith.operator) {
-            resData = modelResult + '.beginWith' + '(' + value + ')';
+            resData = "(" + modelResult + " != null && " + modelResult + '.startsWith' + '("' + value + '"))';
         }
 
         if (operator === endsWith.operator) {
-            resData = modelResult + '.endWith' + '(' + value + ')';
+            resData = "(" + modelResult + " != null && " + modelResult + '.endsWith' + '("' + value + '"))';
         }
 
         if (operator === isBetween.operator) {
