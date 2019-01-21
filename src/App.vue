@@ -23,8 +23,6 @@ export default {
   },
   methods: {
     onRuleChanged(data) {
-      // eslint-disable-next-line
-      console.log(data)
     },
   }
 }

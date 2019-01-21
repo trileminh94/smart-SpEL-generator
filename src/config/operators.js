@@ -34,6 +34,18 @@ export const isBetween = {
   inputs: 2
 }
 
+export const notNull = {
+  operator: 'isnotnull',
+  label: 'not NULL',
+  inputs: 0
+}
+
+export const isNull = {
+  operator: 'isnull',
+  label: 'is NULL',
+  inputs: 0
+}
+
 export const isGreaterThan = {
   operator: 'isGreaterThan',
   label: 'is greater than',
@@ -105,5 +117,7 @@ export default [
   isEmpty,
   isNotEmpty,
   hasField,
-  notHasField
+  notHasField,
+  notNull,
+  isNull
 ]

@@ -44,6 +44,35 @@ export const genCode = (root) => {
     }
 }
 
+export const genCodeArr = (root) => {
+    if (root === null || root.numcolumn <= 0 || root.subrules.length == 0) {
+        return "";
+    }
+
+    var result = root.subrules.reduce ((pre, nextRule) => {
+        var r = ''
+        if (nextRule.operator !== undefined) {
+            if (nextRule.operator.operator === 'is') {
+              r = "logArr[" + nextRule.column + "] == " + `"${nextRule.value}"`
+            } else if (nextRule.operator.operator === 'isNot') {
+              r = "logArr[" + nextRule.column + "] != " + `"${nextRule.value}"`
+            } else if (nextRule.operator.operator === 'isnotnull') {
+              r = "logArr[" + nextRule.column + "] != null"
+            } else if (nextRule.operator.operator === 'isnull') {
+              r = "logArr[" + nextRule.column + "] == null"
+            }
+        }
+        if (pre === '') {
+            return r
+        } else if (r !== '') {
+            return pre + " && " + r
+        } else {
+            return pre
+        }
+    }, "");
+    return result
+}
+
 function checkValid(root) {
     var operatorType = root.operatorType;
     if (operatorType === 'simple') {

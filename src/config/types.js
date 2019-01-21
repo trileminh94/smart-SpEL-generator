@@ -15,7 +15,9 @@ import {
   notEqual,
   equal,
   hasField,
-  notHasField
+  notHasField,
+  notNull,
+  isNull
 } from './operators'
 
 export default {
@@ -24,5 +26,6 @@ export default {
   cmd: [is],
   json: [equal, notEqual, contains, notContain, beginsWith, endsWith, hasField, notHasField],
   date: [is, isNot, inLast, notInLast, isBetween],
-  array: [isEmpty, isNotEmpty]
+  array: [isEmpty, isNotEmpty],
+  column: [is, isNot, notNull, isNull]
 }

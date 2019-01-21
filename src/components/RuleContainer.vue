@@ -2,7 +2,8 @@
   <div class="wrapper">
     <div style="display: flex; flex-direction: column; flex-grow: 1; padding: 20px; min-width: 600px !important;">
         <form class="rules" @submit.prevent="submit" >
-            <Rule v-if="rule !== null && type == 'logjob'" :rule="rule" @input="onRuleChanged" @remove="removeRule()"/>
+            <Rule v-if="inRule !== null && inType == 'logjob'" :rule="inRule" @input="onRuleChanged" @remove="removeRule()"/>
+            <RuleArr v-if="inRule !== null && inType == 'logarr'" :rule="inRule" @input="onRuleChanged" @remove="removeRule()"/>
             <button v-if="isNoRule" @click.prevent="addRule">+ Rule LogJob</button>
             <button v-if="isNoRule" @click.prevent="addRuleNoFormat">+ Rule LogArr</button>
         </form>
@@ -11,54 +12,65 @@
             <textarea disabled class="ruleInput" :value="code"></textarea>
         </div>
     </div>
-    <pre class="preview" style="max-width: 300px;">{{ rule }}</pre>
+    <pre class="preview" style="max-width: 300px;">{{ inRule }}</pre>
   </div>
 </template>
 
 <script>
 import models from '../config/models'
 import operators from '../config/operators'
-import { genCode } from '../config/gencode'
+import { genCode, genCodeArr } from '../config/gencode'
 
 export default {
   name: 'rule-container',
   components: {
-    Rule: () => import("./Rule")
+    Rule: () => import("./Rule"),
+    RuleArr: () => import("./RuleArr")
   },
-
+  data() {
+    return {
+      inRule: null,
+      inType: null
+    }
+  },
   props: ['rule', 'type'],
-
-  created: () => {
+  created () {
     // this.rule = JSON.parse(JSON.stringify(initData))
+    this.inRule = Object.assign({}, this.rule)
+    this.inType = this.type
   },
 
   computed: {
     isNoRule() {
-      return this.rule === null;
+      return this.inRule === null;
     },
     code () {
-        if (this.type == 'logjob') {
-            return "(logJob != null && " + genCode(this.rule) + ")"
-        } else {
-            return ""
-        }
+      if (this.inType === 'logjob') {
+          return "(logJob != null && " + genCode(this.inRule) + ")"
+      } else if (this.inType === 'logarr') {
+          var codeGen = genCodeArr(this.inRule)
+          if (codeGen !== '') {
+            return "(logArr != null && logArr.length > " + this.inRule.numcolumn + " && " + codeGen + ")"
+          }
+          return ''
+      }
     }
   },
 
   methods: {
     addRule() {
-      this.rule = this.createNewRule();
-      this.type = 'logjob';
+      this.inRule = this.createNewRule();
+      this.inType = 'logjob';
     },
 
     addRuleNoFormat() {
-      this.rule = this.createNewArrRule();
-      this.type = 'logarr';
+      this.inRule = this.createNewArrRule();
+      this.inType = 'logarr';
     },
 
     onRuleChanged(data) {
-      Object.assign(this.rule, data);
-      this.$emit('input', this.rule)
+      this.inRule = Object.assign({}, data);
+      this.$emit('input', this.inRule)
     },
 
     createNewRule() {
@@ -73,19 +85,24 @@ export default {
       };
     },
 
+    submit () {
+
+    },
+
     createNewArrRule() {
       return {
-        
+        id: new Date().getTime(),
+        subrules: []
       }
     },
 
     removeRule() {
-      this.rule = null;
+      this.inRule = null;
       this.notifyParentForUpdate();
     },
 
     notifyParentForUpdate() {
-      this.$emit("input", this.rule);
+      this.$emit("input", this.inRule);
     }
   }
 };

@@ -184,8 +184,6 @@ export default {
           result = this.simpleOperatorOptions.find(o => o.operator === operator)
         }
       }
-      // eslint-disable-next-line
-      console.log("get ", operatorType, operator, result)
       return result
     },
 
